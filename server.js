@@ -7,7 +7,7 @@ const ask = require("request");
 const cheerio = require("cheerio");
 
 // Require all models
-const db = require("./models");
+const db = require("./models")(mongoose);
 
 PORT = process.env.PORT || process.env.DEV_PORT;
 
@@ -25,14 +25,17 @@ app.engine("handlebars", exphbs({
        defaultLayout: "main"
      }));
 app.set("view engine", "handlebars");
+
 // Connect to the Mongo DB
-mongoose.connect("mongodb://localhost/mongoHeadlinesdb", {useNewUrlParser: true});
+mongoose.Promise = Promise;
+const MONGODB_URI = process.env.MONGODB_URI || process.env.LOCAL_MONGODB_URI;
+mongoose.connect(MONGODB_URI, {useNewUrlParser: true});
 mongoose.set("useCreateIndex", true);
 mongoose.set("useFindAndModify", false);
 
 // Routes
-require("./routes/apiRoutes")(app);
-require("./routes/htmlRoutes")(app);
+require("./routes/apiRoutes")(app, ask, cheerio, db);
+require("./routes/htmlRoutes")(app, ask, cheerio, db);
 
 // Start the server
 app.listen(PORT, function() {
