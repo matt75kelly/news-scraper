@@ -1,4 +1,4 @@
-require("dotenv");
+require("dotenv").config();
 const express = require("express");
 const bodyParser = require("body-parser");
 const exphbs = require("express-handlebars");
@@ -7,10 +7,9 @@ const ask = require("request");
 const cheerio = require("cheerio");
 
 // Require all models
-const db = require("./models")(mongoose);
+const db = require("./models");
 
 PORT = process.env.PORT || process.env.DEV_PORT;
-
 // Initialize Express
 var app = express();
 
