@@ -1,6 +1,6 @@
 module.exports = function(app, ask, cheerio, db){
 // Route to initiate the scrape
-app.get("/scrape", function(req, res) {
+app.post("/scrape", function(req, res) {
      // First, we grab the body of the html with request
      ask.get(process.env.SCRAPER_TARGET_URL, function(err, response, html) {
           if(err) console.log(err);
@@ -42,10 +42,8 @@ app.get("/scrape", function(req, res) {
      });
     });
 // Route to Save a News Article
-app.put("/articles/:id", function(res, req){
-  db.Articles.findByIdAndUpdate({
-    _id: req.params.id
-  }, {
+app.put("/articles/:id", function(req, res){
+  db.Articles.findByIdAndUpdate(req.params.id, {
     isSaved : true
   }, result=>{
     res.json(result);
@@ -53,22 +51,25 @@ app.put("/articles/:id", function(res, req){
 });
 
 // Route to Add Comment to an Article
-app.put("/comments/:id", function(req, res){
-  
+app.post("/comments/:id", function(req, res){
+  db.Comments.create({
+    title: req.body.title,
+    text: req.body.text,
+    articleId: req.params.id
+  }, result=>{
+    console.log(result);
+    res.json(result);
+  })
 })
 // Route to Delete Comments from an Article
 app.delete("/comments/:id", function(req, res){
-  db.Comments.findByIdAndRemove({
-    _id: req.params.id
-  }, result=>{
+  db.Comments.findByIdAndRemove(req.params.id, result=>{
     res.json(result);
   })
 });
 // Route to Delete a Saved Article
 app.delete("/articles/:id", function(req, res){
-  db.Articles.findByIdAndUpdate({
-    _id: req.params.id
-  }, {
+  db.Articles.findByIdAndUpdate(req.params.id, {
     isSaved: false
   }, result=>{
     res.json(result);

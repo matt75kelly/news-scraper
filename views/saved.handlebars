@@ -1,0 +1,15 @@
+{{#each articles}}
+     {{#if isSaved}}
+     <div class="card">
+          <div class="card-header">
+               <h3><a href={{link}}>{{title}}</a></h3>
+          </div>
+          <div class="card-body">
+               <p class="card-text">{{summary}}</p>
+               <button type="button" id="comment{{_id}}" class="btn btn-primary cmmtBtn" data-toggle="modal" data-target="#commentModal" data-article="{{_id}}">Add a Comment</button>
+               <a href="#" id="{{_id}}" class="btn btn-danger rmvbtn">Remove Article</a>
+          </div>
+     </div>
+     
+     {{/if}}
+{{/each}}

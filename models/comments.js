@@ -7,13 +7,24 @@ var Schema = mongoose.Schema;
 // This is similar to a Sequelize model
 var CommentSchema = new Schema({
   // `title` is of type String
-  title: String,
+  title: {
+    type: String,
+    required: true
+  },
   // `body` is of type String
-  body: String, 
+  text: {
+    type: String, 
+    required: true
+  },
   // date created
   created: {
     type: Date,
     default: Date.now
+  },
+  articleId: {
+    type: Schema.Types.ObjectId,
+    ref: "Articles",
+    required: true
   }
 });
 

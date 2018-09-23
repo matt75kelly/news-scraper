@@ -5,9 +5,13 @@ module.exports = function(app, ask, cheerio, db){
 
 // Route for grabbing the main index page
 app.get("/", function(req, res){
-     db.Article.find({}).limit(10).sort(-scrappedAt)
+     db.Articles.find({}).limit(10).sort("scrapedAt")
      .then(data=>{
-       res.render("index", data);
+       console.log(data);
+       let hbObj = {
+         articles : data
+       }
+       res.render("index", hbObj);
      })
 });
 
@@ -18,10 +22,13 @@ app.get("/saved", function(req, res) {
      // Finish the route so it finds one article using the req.params.id,
      // and run the populate method with "note",
      // then responds with the article with the note included
-     db.Article.find({
+     db.Articles.find({
        isSaved: true
-     }).populate("comments").then(data=>{
-       console.log(data);
-       res.render("saved", data);
+     }).populate("Comments").then(data=>{
+       let hbObj = {
+         articles: data
+       }
+
+       res.render("saved", hbObj);
      })
    })}
